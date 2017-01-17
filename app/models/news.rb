@@ -5,10 +5,12 @@ class News < ApplicationRecord
   BLACKLIST_KEYWORDS = ['President', 'China'].freeze
 
   enum status: {
-    'normal': 1,
-    'interesting': 2,
-    'boring': 3
+    normal: 1,
+    interesting: 2,
+    boring: 3
   }
+
+  before_save :update_news_status
 
   def self.update_from_google_feed
     feed = Feedjira::Feed.fetch_and_parse(GOOGLE_NEWS_URI)
@@ -16,6 +18,32 @@ class News < ApplicationRecord
   end
 
   private
+
+  def update_news_status
+    whitelisted_words_count = count_presence(WHITELIST_KEYWORDS)
+    blacklisted_words_count = count_presence(BLACKLIST_KEYWORDS)
+    result = whitelisted_words_count - blacklisted_words_count
+
+    self.status =
+      if result > 0
+        News.statuses['interesting']
+      elsif result < 0
+        News.statuses['boring']
+      else
+        News.statuses['normal']
+      end
+  end
+
+  def count_presence(list)
+    content_without_tags = ActionController::Base.helpers.strip_tags(content)
+    content_words = content_without_tags.downcase.gsub(/[,'!?\.]/, '').split
+    counter = 0
+    list.each do |word|
+      presence =  content_words.count(word.downcase)
+      counter += presence
+    end
+    counter
+  end
 
   def self.add_news(entries)
     entries.each do |entry|
