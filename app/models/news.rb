@@ -1,6 +1,14 @@
 class News < ApplicationRecord
 
   GOOGLE_NEWS_URI = 'https://news.google.com/news?&output=rss'
+  WHITELIST_KEYWORDS = ['Brexit', 'Trump', 'Apple'].freeze
+  BLACKLIST_KEYWORDS = ['President', 'China'].freeze
+
+  enum status: {
+    'normal': 1,
+    'interesting': 2,
+    'boring': 3
+  }
 
   def self.update_from_google_feed
     feed = Feedjira::Feed.fetch_and_parse(GOOGLE_NEWS_URI)
