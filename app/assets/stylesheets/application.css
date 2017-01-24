@@ -34,3 +34,23 @@ span.feed-category {
   text-decoration: underline;
 }
 
+.red-heart {
+  color: red;
+  margin-right: 5px;
+}
+
+.like {
+  margin-left: 20px;
+}
+
+[class*='heart'] {
+  margin-left: 5px;
+}
+
+.fa:hover {
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}

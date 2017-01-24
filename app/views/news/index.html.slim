@@ -6,4 +6,13 @@ h1 Google news feed
     p
       span = news.published_at.strftime("%m/%d/%Y, %H:%M")
       span.feed-category = news.feed.category
+      span.like
+        - if news.like_status.nil?
+          span.text
+            = 'Do you like me?'
+            span class="fa fa-heart red-heart" data-news-id="#{news.id}" data-like-status="liked"
+            = 'or not?'
+            span class="fa fa-heart" data-news-id="#{news.id}" data-like-status="disliked"
+        span class="#{'hidden' if news.like_status.nil?} fa #{news.liked? ? 'fa-heart red-heart' : 'fa-heart'}" data-like-status="reset"
+
     p = news.content.html_safe

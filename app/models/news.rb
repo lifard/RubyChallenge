@@ -2,6 +2,8 @@ class News < ApplicationRecord
 
   belongs_to :feed
 
+  before_save :update_news_status
+
   enum status: {
     normal: 1,
     interesting: 2,
@@ -12,8 +14,6 @@ class News < ApplicationRecord
     liked: 1,
     disliked: 2
   }
-
-  before_save :update_news_status
 
   def self.update_from_feed(feed)
     new_feed = Feedjira::Feed.fetch_and_parse(feed.url)
