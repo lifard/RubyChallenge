@@ -8,6 +8,11 @@ class News < ApplicationRecord
     boring: 3
   }
 
+  enum like_status: {
+    liked: 1,
+    disliked: 2
+  }
+
   before_save :update_news_status
 
   def self.update_from_feed(feed)
