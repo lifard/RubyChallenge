@@ -1,5 +1,11 @@
 class Feed < ApplicationRecord
 
-  validates :name, :feed_url, presence: true
+  validates :name, :url, :category, presence: true
+
+  enum category: {
+    politics: 1,
+    sports: 2,
+    economics: 3
+  }
 
 end

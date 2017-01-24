@@ -34,7 +34,8 @@ ActiveRecord::Schema.define(version: 20170123152423) do
 
   create_table "feeds", force: :cascade do |t|
     t.string   "name",       null: false
-    t.string   "feed_url",   null: false
+    t.string   "url",        null: false
+    t.integer  "category",   null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
