@@ -3,5 +3,7 @@ h1 Google news feed
 - @news.each do |news|
   div class = "#{news.status}"
     h4 = link_to news.name, news.url, target: '_blank'
-    p = news.published_at.strftime("%m/%d/%Y, %H:%M")
+    p
+      span = news.published_at.strftime("%m/%d/%Y, %H:%M")
+      span.feed-category = news.feed.category
     p = news.content.html_safe
