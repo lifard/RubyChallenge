@@ -1,5 +1,7 @@
 class News < ApplicationRecord
 
+  belongs_to :feed
+
   GOOGLE_NEWS_URI = 'https://news.google.com/news?&output=rss'
   WHITELIST_KEYWORDS = ['Brexit', 'Trump', 'Apple'].freeze
   BLACKLIST_KEYWORDS = ['President', 'China'].freeze
@@ -12,9 +14,9 @@ class News < ApplicationRecord
 
   before_save :update_news_status
 
-  def self.update_from_google_feed
-    feed = Feedjira::Feed.fetch_and_parse(GOOGLE_NEWS_URI)
-    add_news(feed.entries)
+  def self.update_from_feed(feed)
+    new_feed = Feedjira::Feed.fetch_and_parse(feed)
+    add_news(new_feed.entries, feed)
   end
 
   private
@@ -45,7 +47,7 @@ class News < ApplicationRecord
     counter
   end
 
-  def self.add_news(entries)
+  def self.add_news(entries, feed)
     entries.each do |entry|
       unless exists?(guid: entry.entry_id)
         create!(
@@ -53,7 +55,8 @@ class News < ApplicationRecord
           content:      entry.summary,
           url:          entry.url,
           published_at: entry.published,
-          guid:         entry.entry_id
+          guid:         entry.entry_id,
+          feed_id:      feed.id
         )
       end
     end
