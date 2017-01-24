@@ -12,6 +12,7 @@
  *
  *= require_tree .
  *= require active_admin
+ *= require font-awesome
  *= require_self
  */
 
