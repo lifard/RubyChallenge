@@ -15,7 +15,7 @@ class News < ApplicationRecord
   before_save :update_news_status
 
   def self.update_from_feed(feed)
-    new_feed = Feedjira::Feed.fetch_and_parse(feed)
+    new_feed = Feedjira::Feed.fetch_and_parse(feed.url)
     add_news(new_feed.entries, feed)
   end
 
