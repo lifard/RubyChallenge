@@ -2,10 +2,6 @@ class News < ApplicationRecord
 
   belongs_to :feed
 
-  GOOGLE_NEWS_URI = 'https://news.google.com/news?&output=rss'
-  WHITELIST_KEYWORDS = ['Brexit', 'Trump', 'Apple'].freeze
-  BLACKLIST_KEYWORDS = ['President', 'China'].freeze
-
   enum status: {
     normal: 1,
     interesting: 2,
@@ -22,8 +18,8 @@ class News < ApplicationRecord
   private
 
   def update_news_status
-    whitelisted_words_count = count_presence(WHITELIST_KEYWORDS)
-    blacklisted_words_count = count_presence(BLACKLIST_KEYWORDS)
+    whitelisted_words_count = count_presence(whitelist)
+    blacklisted_words_count = count_presence(blacklist)
     result = whitelisted_words_count - blacklisted_words_count
 
     self.status =
@@ -60,5 +56,13 @@ class News < ApplicationRecord
         )
       end
     end
+  end
+
+  def whitelist
+    Keyword.whitelist.map(&:content)
+  end
+
+  def blacklist
+    Keyword.blacklist.map(&:content)
   end
 end
